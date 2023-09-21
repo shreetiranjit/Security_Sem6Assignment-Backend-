@@ -1,0 +1,1 @@
+This folder is created for temporary storing the images before sending it to the cloud storage.

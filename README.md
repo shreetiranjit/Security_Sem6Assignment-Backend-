@@ -1,1 +1,1 @@
-# Security_Sem6Assignment
+# Shreeti Store - Multi Vendor eCommerce Marketplace
