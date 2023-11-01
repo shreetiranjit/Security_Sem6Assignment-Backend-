@@ -121,7 +121,9 @@ const verifyUser = catchAsync(async (req, res, next) => {
   res.status(201).json({ success: true })
 })
 
+//account locked after 5 attemopt
 const MAX_LOGIN_ATTEMPTS = 5
+//account locked for 2 hours
 const LOCK_TIME = 2 * 60 * 60 * 1000
 
 // Login User

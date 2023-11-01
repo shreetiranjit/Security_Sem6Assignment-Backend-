@@ -39,10 +39,12 @@ const userSchema = new mongoose.Schema(
       token: String,
       expiration: Date,
     },
+    //attemopt to login 
     loginAttempts: {
       type: Number,
       default: 0,
     },
+    //accounc locked
     lockUntil: {
       type: Number,
     },
