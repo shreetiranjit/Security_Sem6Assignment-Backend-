@@ -18,13 +18,8 @@ const uniqueIdGenerator = require('../utils/uniqueIdGenerator')
 const { cloudinary } = require('../config/cloudinaryUpload')
 const { sendMail, sendOTPMail, sendPasswordChangeMail, sendForgotPasswordUserMail } = require('../utils/emailSender')
 // const { sendForgetPasswordEmail } = require('./shop')
-
-// Mongo ID
 const mongoId = require('mongoose').Types.ObjectId
-
 const otpStore = {}
-
-// Function to generate OTP
 function generateOtp() {
   let otp = ''
   for (let i = 0; i < 6; i++) {
@@ -32,14 +27,10 @@ function generateOtp() {
   }
   return otp
 }
-
-// Function to store OTP
 function storeOtp(email, otp) {
   const expiry = Date.now() + 10 * 60 * 1000
   otpStore[email] = { otp, expiry }
 }
-
-// Function to verify OTP
 function verifyOtp(email, otp) {
   const record = otpStore[email]
   if (!record) return false
@@ -47,7 +38,6 @@ function verifyOtp(email, otp) {
   if (isOtpValid) delete otpStore[email]
   return isOtpValid
 }
-
 const registerUser = catchAsync(async (req, res, next) => {
   const { username, email, password } = req.body
   const { error } = UserValidation.validate(req.body)
@@ -71,18 +61,14 @@ const registerUser = catchAsync(async (req, res, next) => {
       )
     )
   }
-
   const findUserByEmail = await User.findOne({ email: email })
   const findUserByUsername = await User.findOne({ username: username })
 
   if (findUserByEmail) return next(new expressError('Try Different Email.', 400))
   if (findUserByUsername) return next(new expressError('Try Different Username.', 400))
-
-  // Generate and send OTP
-  const otp = generateOtp()
+  const otp_one = generateOtp()
   const otpExpiry = new Date(Date.now() + 10 * 60 * 1000)
   const hash = await bcrypt.hash(password, 10)
-
   const newUser = new User({
     username,
     email,
@@ -90,43 +76,33 @@ const registerUser = catchAsync(async (req, res, next) => {
     passwordHistory: [hash],
     passwordChangedAt: new Date(),
     isVerified: false,
-    otp: otp,
+    otp: otp_one,
     otpExpiry: otpExpiry,
   })
-
   await newUser.save()
   await sendOTPMail(email, otp)
   res.status(201).json({ success: true, data: email, msg: 'OTP Sent.' })
 })
-
-// User Verification Route
 const verifyUser = catchAsync(async (req, res, next) => {
   const { email, otp } = req.body
-
   const user = await User.findOne({ email: email })
   console.log('user', user)
 
-  // Check if OTP is valid and not expired
   if (!user || !user.otp || user.otpExpiry < new Date() || user.otp !== otp) {
     return next(new expressError('Invalid or expired OTP.', 400))
   }
-
   user.isVerified = true
   user.otp = undefined
   user.otpExpiry = undefined
   const saveUser = await user.save()
-
   Wishlist.create({ owner: saveUser._id })
   const newCart = await Cart.create({ user: saveUser._id })
   res.status(201).json({ success: true })
 })
-
-//account locked after 5 attemopt
 const MAX_LOGIN_ATTEMPTS = 5
-//account locked for 2 hours
 const LOCK_TIME = 2 * 60 * 60 * 1000
 
-// Login User
+//login user
 const loginUser = catchAsync(async (req, res, next) => {
   const { emailOrUsername, password, Products } = req.body
   if (!emailOrUsername || !password) return next(new expressError('Fill All Fields.', 400))

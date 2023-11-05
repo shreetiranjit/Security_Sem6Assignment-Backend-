@@ -32,7 +32,9 @@ const userSchema = new mongoose.Schema(
     },
     passwordHistory: [{ type: String }],
     passwordChangedAt: { type: Date },
+    //otp
     otp: { type: String },
+    //otp expiry
     otpExpiry: { type: Date },
     isVerified: { type: Boolean, default: false },
     resetPassword: {
