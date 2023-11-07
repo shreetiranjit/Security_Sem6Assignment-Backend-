@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema(
       token: String,
       expiration: Date,
     },
-    //attemopt to login 
+    //attemopt to login
     loginAttempts: {
       type: Number,
       default: 0,

@@ -26,6 +26,7 @@ const sendEmail = async (toEmail, subject, htmlContent) => {
   }
 }
 
+//static email content
 const createOTPMailContent = (email, otp) => {
   return `
   <!DOCTYPE html>
