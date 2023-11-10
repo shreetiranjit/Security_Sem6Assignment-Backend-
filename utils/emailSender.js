@@ -130,6 +130,7 @@ const passwordChangeMailContent = email => {
 `
 }
 
+//order mail confirmation content
 const orderStatusMailContent = text => {
   return `
   <!DOCTYPE html>
@@ -181,6 +182,8 @@ const orderStatusMailContent = text => {
 </html>
 `
 }
+
+//forgot password mail content
 const forgotPasswordShopMailContent = (email, companyName, origin, token) => {
   return `
   <!DOCTYPE html>
@@ -245,6 +248,7 @@ const forgotPasswordShopMailContent = (email, companyName, origin, token) => {
 `
 }
 
+//added forgot password user mail content
 const forgotPasswordUserMailContent = (email, username, token) => {
   return `
   <!DOCTYPE html>
